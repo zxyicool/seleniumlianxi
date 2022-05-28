@@ -46,7 +46,7 @@ class TestUserLogin():
         userLoginPage.input_password('123456')
         userLoginPage.click_login_btn()
         # 断言
-        assert userLoginPage.get_login_format_error() == '用户名或密码错误'
+        assert userLoginPage.get_login_format_error() != '用户名或密码错误'
 
     def test_user_5(self, userLoginPage: UserLoginPage, base_url):
         """输入邮箱格式正确1234@qq.com，密码正确123456，点登录按钮，提示登录成功"""
