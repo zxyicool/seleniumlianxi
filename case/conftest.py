@@ -6,6 +6,9 @@
 @IDE ：PyCharm
 
 """
+from optparse import Option
+import platform
+from selenium.webdriver.chrome.options import Options
 import pytest
 from selenium import webdriver
 from page.register_page import RegisterPage
@@ -15,12 +18,33 @@ from page.user_feedbackiframe_page import FeedbackPage
 from page.user_info_page import UserInfoPage
 
 
+# @pytest.fixture(scope='session', name='driver')
+# def browser():
+#     driver = webdriver.Chrome()
+#     driver.maximize_window()
+#     yield driver
+#     # driver.quit()
+
+
 @pytest.fixture(scope='session', name='driver')
 def browser():
-    driver = webdriver.Chrome()
-    driver.maximize_window()
-    yield driver
-    # driver.quit()
+    """定义全局driver"""
+    if platform.system() == 'Window':
+        # window系统
+        _driver = webdriver.Chrome()
+        _driver.maximize_window()
+    else:
+        # linux启动
+        chrome_options = Options()
+        chrome_options.add_argument('--window-size=1920,1080')  # 设置当前窗口的宽度和高度
+        chrome_options.add_argument('--no-sandbox')  # 解决DevToolsActivePort文件不存在报错问题
+        chrome_options.add_argument('--disable-dev-shm-usage')
+        chrome_options.add_argument('--disable-gpu')
+        chrome_options.add_argument('--headless')
+        _driver = webdriver.Chrome(chrome_options=chrome_options)
+
+    yield _driver
+    _driver.quit()
 
 
 @pytest.fixture(scope='session')
